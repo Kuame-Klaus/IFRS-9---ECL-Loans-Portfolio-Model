@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IFRS 9 — Financial Instruments: Study Blueprint</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0D2436;
+    --panel:#143650;
+    --panel-light:#1B4462;
+    --cyan:#7EC8E3;
+    --amber:#E8A33D;
+    --text:#EAF3FA;
+    --muted:#8FADC2;
+    --line: rgba(126,200,227,0.35);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--ink);
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 32px 32px;
+    background-attachment: fixed;
+    color:var(--text);
+    font-family:'IBM Plex Sans', sans-serif;
+    line-height:1.6;
+  }
+  a{color:var(--cyan);}
+  .wrap{max-width:920px;margin:0 auto;padding:0 24px;}
+
+  .crosshair{position:relative;}
+  .crosshair::before,.crosshair::after{
+    content:"";position:absolute;width:14px;height:14px;
+    border-top:1.5px solid var(--cyan); border-left:1.5px solid var(--cyan);
+    opacity:.6;
+  }
+  .crosshair::before{top:-6px;left:-6px;}
+  .crosshair::after{bottom:-6px;right:-6px;border-top:none;border-left:none;border-bottom:1.5px solid var(--cyan);border-right:1.5px solid var(--cyan);}
+
+  header.hero{padding:80px 0 60px; border-bottom:1px solid var(--line);}
+  .eyebrow{font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.18em; text-transform:uppercase; color:var(--amber); margin-bottom:18px;}
+  h1.title{font-family:'Space Grotesk',sans-serif; font-size:clamp(36px,6vw,64px); font-weight:700; margin:0 0 12px; letter-spacing:-0.01em;}
+  .subtitle{color:var(--muted); font-size:17px; max-width:60ch; margin-bottom:48px;}
+
+  /* Three-bucket flow diagram (staging) */
+  .diagram{display:flex; align-items:center; justify-content:center; gap:0; padding:36px 16px; margin-top:20px; border:1px dashed var(--line); position:relative; flex-wrap:wrap;}
+  .diagram .box{border:1.5px dashed var(--cyan); padding:18px 20px; text-align:center; min-width:150px; font-family:'IBM Plex Mono',monospace; font-size:12px;}
+  .diagram .box .big{display:block; font-family:'Space Grotesk',sans-serif; font-size:16px; font-weight:600; color:var(--text); margin-bottom:5px;}
+  .diagram .box.s3{border-color:var(--amber);}
+  .diagram .box.s3 .big{color:var(--amber);}
+  .diagram .connector{flex:0 0 60px; height:1px; background:var(--line); position:relative; margin:0 4px;}
+  .diagram .connector span{position:absolute; top:-30px; left:50%; transform:translateX(-50%); font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--amber); white-space:nowrap;}
+  .diagram .connector::before, .diagram .connector::after{content:""; position:absolute; top:-4px; width:1px; height:9px; background:var(--line);}
+  .diagram .connector::before{left:0;} .diagram .connector::after{right:0;}
+
+  nav.index{display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:1px; background:var(--line); border:1px solid var(--line); margin:40px 0 0;}
+  nav.index a{background:var(--panel); text-decoration:none; color:var(--text); padding:14px 16px; font-family:'IBM Plex Mono',monospace; font-size:12.5px; display:flex; justify-content:space-between; gap:8px; transition:background .15s ease;}
+  nav.index a:hover{background:var(--panel-light);}
+  nav.index a .n{color:var(--amber);}
+
+  section{padding:64px 0; border-bottom:1px solid var(--line);}
+  section:last-of-type{border-bottom:none;}
+  .sheet-label{font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--amber); letter-spacing:.14em; text-transform:uppercase; margin-bottom:10px;}
+  h2{font-family:'Space Grotesk',sans-serif; font-size:clamp(24px,3.4vw,32px); margin:0 0 22px; font-weight:600;}
+  h3{font-family:'Space Grotesk',sans-serif; font-size:19px; margin:28px 0 10px; color:var(--text);}
+  p{color:#D7E6F0; max-width:74ch;}
+  .lead{color:var(--text); font-size:16px;}
+
+  .callout{border-left:2px solid var(--amber); background:var(--panel); padding:16px 20px; margin:20px 0; font-size:14.5px; color:#D7E6F0;}
+  .callout strong{color:var(--amber);}
+
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:20px; margin:24px 0;}
+  .grid3{display:grid; grid-template-columns:1fr 1fr 1fr; gap:20px; margin:24px 0;}
+  @media (max-width:680px){.grid2,.grid3{grid-template-columns:1fr;}}
+  .card{border:1px solid var(--line); padding:20px; background:var(--panel);}
+  .card.amber{border-color:var(--amber);}
+  .card h4{margin:0 0 8px; font-family:'Space Grotesk',sans-serif; font-size:16px; color:var(--cyan);}
+  .card.amber h4{color:var(--amber);}
+  .card p{font-size:14px; margin:0; color:#CBDCE9;}
+
+  .formula{font-family:'IBM Plex Mono',monospace; background:var(--panel); border:1px solid var(--line); padding:16px 20px; margin:18px 0; font-size:14.5px; color:var(--cyan); overflow-x:auto;}
+  .formula .op{color:var(--amber);}
+
+  table{width:100%; border-collapse:collapse; margin:18px 0; font-size:13.5px;}
+  th,td{border:1px solid var(--line); padding:9px 12px; text-align:right; font-family:'IBM Plex Mono',monospace;}
+  th{background:var(--panel-light); color:var(--text); font-weight:600; text-align:right;}
+  td:first-child, th:first-child{text-align:left; font-family:'IBM Plex Sans',sans-serif;}
+
+  .acc-item{border:1px solid var(--line); margin-bottom:8px; background:var(--panel);}
+  .acc-head{width:100%; text-align:left; background:none; border:none; color:var(--text); font-family:'IBM Plex Mono',monospace; font-size:13.5px; padding:14px 18px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; gap:12px;}
+  .acc-head:hover{color:var(--cyan);}
+  .acc-head .plus{color:var(--amber); font-size:16px; transition:transform .2s ease;}
+  .acc-item.open .plus{transform:rotate(45deg);}
+  .acc-body{max-height:0; overflow:hidden; transition:max-height .25s ease;}
+  .acc-body-inner{padding:0 18px 16px; font-size:14px; color:#CBDCE9;}
+
+  .quiz-card{border:1px dashed var(--line); padding:18px 20px; margin-bottom:12px; background:var(--panel);}
+  .quiz-q{font-family:'Space Grotesk',sans-serif; font-size:15.5px; margin-bottom:10px;}
+  .quiz-reveal-btn{font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.06em; background:none; border:1px solid var(--cyan); color:var(--cyan); padding:7px 14px; cursor:pointer; text-transform:uppercase;}
+  .quiz-reveal-btn:hover{background:var(--cyan); color:var(--ink);}
+  .quiz-answer{display:none; margin-top:12px; padding-top:12px; border-top:1px dashed var(--line); font-size:14px; color:#CBDCE9;}
+  .quiz-card.revealed .quiz-answer{display:block;}
+  .quiz-card.revealed .quiz-reveal-btn{display:none;}
+
+  footer{padding:40px 0 60px; color:var(--muted); font-size:12.5px; font-family:'IBM Plex Mono',monospace;}
+  ::selection{background:var(--amber); color:var(--ink);}
+  :focus-visible{outline:2px solid var(--amber); outline-offset:2px;}
+  @media (prefers-reduced-motion: reduce){html{scroll-behavior:auto;} .acc-body, .plus{transition:none;}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Study Blueprint — Sheet Set 01–07</div>
+    <h1 class="title">IFRS 9<br>Financial Instruments</h1>
+    <p class="subtitle">How a financial asset gets classified, how its expected losses get provisioned before they happen, and where the judgment calls sit.</p>
+
+    <div class="diagram crosshair">
+      <div class="box"><span class="big">Stage 1</span>Performing<br>12-month ECL</div>
+      <div class="connector"><span>SICR ↑</span></div>
+      <div class="box"><span class="big">Stage 2</span>Underperforming<br>Lifetime ECL</div>
+      <div class="connector"><span>Default</span></div>
+      <div class="box s3"><span class="big">Stage 3</span>Credit-impaired<br>Lifetime ECL, PD=100%</div>
+    </div>
+
+    <nav class="index">
+      <a href="#sheet01"><span>01 — Three pillars</span><span class="n">→</span></a>
+      <a href="#sheet02"><span>02 — Classification (SPPI)</span><span class="n">→</span></a>
+      <a href="#sheet03"><span>03 — Staging &amp; SICR</span><span class="n">→</span></a>
+      <a href="#sheet04"><span>04 — PD × LGD × EAD</span><span class="n">→</span></a>
+      <a href="#sheet05"><span>05 — Forward-looking info</span><span class="n">→</span></a>
+      <a href="#sheet06"><span>06 — Worked example</span><span class="n">→</span></a>
+      <a href="#sheet07"><span>07 — Audit red flags</span><span class="n">→</span></a>
+      <a href="#quiz"><span>Self-check</span><span class="n">→</span></a>
+    </nav>
+  </div>
+</header>
+
+<section id="sheet01">
+  <div class="wrap">
+    <div class="sheet-label">Sheet 01</div>
+    <h2>The three pillars of IFRS 9</h2>
+    <p class="lead">IFRS 9 replaced IAS 39 in three separate blocks. Most of the day-to-day work — and almost all of the ECL modelling you've been building — sits in the second one.</p>
+    <div class="grid3">
+      <div class="card">
+        <h4>1. Classification &amp; Measurement</h4>
+        <p>Determines whether a financial asset is measured at amortised cost, fair value through OCI, or fair value through P&amp;L — based on the business model and the asset's cash flow characteristics.</p>
+      </div>
+      <div class="card amber">
+        <h4>2. Impairment (ECL)</h4>
+        <p>Replaces IAS 39's "incurred loss" model with a forward-looking "expected credit loss" model — losses are provisioned before a default event actually happens. This is the engine behind the loan portfolio ECL build.</p>
+      </div>
+      <div class="card">
+        <h4>3. Hedge Accounting</h4>
+        <p>A more principles-based, less mechanical model for aligning hedge accounting with an entity's actual risk management activity.</p>
+      </div>
+    </div>
+    <div class="callout"><strong>Key idea:</strong> under IAS 39 you provisioned once a loss event had already happened. Under IFRS 9 you provision for losses you expect to happen — which is why ECL allowances jumped materially for most banks on transition.</div>
+  </div>
+</section>
+
+<section id="sheet02">
+  <div class="wrap">
+    <div class="sheet-label">Sheet 02</div>
+    <h2>Classification: the SPPI test</h2>
+    <p>Every debt financial asset is classified by asking two questions in sequence.</p>
+    <h3>Question 1 — Business model</h3>
+    <p>Is the asset held to <strong>collect contractual cash flows</strong>, held <strong>both to collect and to sell</strong>, or held for <strong>trading / other</strong> purposes?</p>
+    <h3>Question 2 — Cash flow characteristics (SPPI)</h3>
+    <p>Do the contractual cash flows represent <strong>Solely Payments of Principal and Interest</strong> on the principal outstanding — i.e. does it look like a basic lending arrangement (principal plus compensation for time value of money and credit risk), or does it have equity-like or derivative-like features?</p>
+    <div class="grid3">
+      <div class="card">
+        <h4>Amortised Cost</h4>
+        <p>Business model: hold to collect. Cash flows: pass SPPI. Most term loans and trade receivables land here.</p>
+      </div>
+      <div class="card">
+        <h4>FVOCI</h4>
+        <p>Business model: hold to collect and sell. Cash flows: pass SPPI. Common for liquidity-portfolio bonds.</p>
+      </div>
+      <div class="card">
+        <h4>FVTPL</h4>
+        <p>Fails SPPI, or held for trading, or business model is neither of the above. Equities and most derivatives default here.</p>
+      </div>
+    </div>
+    <div class="callout"><strong>Judgment risk:</strong> ECL only applies to amortised cost and FVOCI debt instruments (plus loan commitments and financial guarantees) — not to FVTPL assets, which are already remeasured to fair value through profit or loss. Getting the classification wrong changes whether an asset is in the ECL population at all.</div>
+  </div>
+</section>
+
+<section id="sheet03">
+  <div class="wrap">
+    <div class="sheet-label">Sheet 03</div>
+    <h2>Staging &amp; significant increase in credit risk (SICR)</h2>
+    <p>This is the model you already built in the loan portfolio workbook — the three-stage flow shown in the hero diagram above.</p>
+    <div class="acc-group">
+      <div class="acc-item">
+        <button class="acc-head" onclick="toggleAcc(this)">Stage 1 — Performing <span class="plus">+</span></button>
+        <div class="acc-body"><div class="acc-body-inner">No significant increase in credit risk since initial recognition. Recognise 12-month ECL — the portion of lifetime losses expected from default events possible within 12 months. Interest revenue is calculated on the gross carrying amount.</div></div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-head" onclick="toggleAcc(this)">Stage 2 — Underperforming <span class="plus">+</span></button>
+        <div class="acc-body"><div class="acc-body-inner">SICR has occurred since origination but the asset isn't yet credit-impaired. Recognise lifetime ECL. Common SICR triggers: DPD &gt;= 30 (the standard's rebuttable presumption), internal rating downgrade beyond a defined threshold, being placed on a watchlist, or qualitative indicators like covenant breaches. Interest revenue is still on the gross carrying amount.</div></div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-head" onclick="toggleAcc(this)">Stage 3 — Credit-impaired <span class="plus">+</span></button>
+        <div class="acc-body"><div class="acc-body-inner">Objective evidence of impairment / default — DPD &gt;= 90 is the standard's rebuttable presumption of default. Recognise lifetime ECL, PD effectively 100%. Interest revenue switches to being calculated on the net carrying amount (gross carrying amount less the loss allowance).</div></div>
+      </div>
+    </div>
+    <div class="callout"><strong>Note:</strong> movement between stages goes both ways — an asset that recovers (cure period met, arrears cleared, rating restored) moves back down a stage, reverting from lifetime to 12-month ECL.</div>
+  </div>
+</section>
+
+<section id="sheet04">
+  <div class="wrap">
+    <div class="sheet-label">Sheet 04</div>
+    <h2>The ECL formula: PD × LGD × EAD</h2>
+    <div class="formula">ECL <span class="op">=</span> Probability of Default <span class="op">×</span> Loss Given Default <span class="op">×</span> Exposure at Default, discounted to present value at the asset's effective interest rate</div>
+    <div class="grid3">
+      <div class="card">
+        <h4>PD</h4>
+        <p>Likelihood of default within 12 months (Stage 1) or over the remaining life (Stage 2/3). Usually derived from an internal rating grade mapped to a transition matrix, or a scorecard.</p>
+      </div>
+      <div class="card">
+        <h4>LGD</h4>
+        <p>Proportion of exposure not expected to be recovered after default, net of collateral recoveries (discounted for time and haircut for forced-sale illiquidity) and recovery costs.</p>
+      </div>
+      <div class="card">
+        <h4>EAD</h4>
+        <p>Expected outstanding balance at the point of default — outstanding drawn balance plus any undrawn commitment multiplied by a credit conversion factor (CCF).</p>
+      </div>
+    </div>
+    <p>This is exactly the mechanics behind the Loan Portfolio workbook: Stage drives which PD horizon applies, collateral haircuts drive LGD, and amortised outstanding balance drives EAD.</p>
+  </div>
+</section>
+
+<section id="sheet05">
+  <div class="wrap">
+    <div class="sheet-label">Sheet 05</div>
+    <h2>Forward-looking information</h2>
+    <p>IFRS 9 (para 5.5.17) requires ECL to reflect reasonable and supportable forward-looking information, not just historical loss experience. In practice this means:</p>
+    <div class="grid2">
+      <div class="card">
+        <h4>Macroeconomic scenarios</h4>
+        <p>Most models run multiple scenarios (e.g. base, upside, downside — GDP growth, unemployment, commodity prices, exchange rates) and probability-weight the ECL outcome across them rather than using a single deterministic path.</p>
+      </div>
+      <div class="card">
+        <h4>Management overlays</h4>
+        <p>Judgmental adjustments layered on top of the modelled output when the model hasn't yet caught up with an emerging risk (e.g. a new tariff regime or a sector-specific shock) — these need clear documentation and governance sign-off.</p>
+      </div>
+    </div>
+    <div class="callout"><strong>Judgment risk:</strong> overlays that are large, one-directional (always reducing provisions), or undocumented are a classic red flag — they can become a mechanism for earnings management if not independently challenged.</div>
+  </div>
+</section>
+
+<section id="sheet06">
+  <div class="wrap">
+    <div class="sheet-label">Sheet 06</div>
+    <h2>Worked example</h2>
+    <p>A Stage 2 loan: outstanding balance (EAD) GHS 1,000,000, lifetime PD 15%, collateral forced-sale value GHS 700,000 with recovery costs of 5%.</p>
+    <div class="formula">
+      Net recoverable <span class="op">=</span> 700,000 × (1 − 0.05) <span class="op">=</span> GHS 665,000<br>
+      LGD <span class="op">=</span> (1,000,000 − 665,000) / 1,000,000 <span class="op">=</span> 33.5%<br>
+      ECL (undiscounted) <span class="op">=</span> 0.15 × 0.335 × 1,000,000 <span class="op">=</span> GHS 50,250
+    </div>
+    <p>If this same loan later hits 90+ days past due and is reclassified to Stage 3, PD jumps to 100% and the calculation shifts to a discounted-cash-flow workout basis rather than the PD × LGD × EAD formula:</p>
+    <div class="formula">ECL (Stage 3) <span class="op">≈</span> EAD − PV(expected recoveries) <span class="op">=</span> 1,000,000 − 665,000 <span class="op">=</span> GHS 335,000</div>
+    <p>The roughly 6.7x jump between the two figures is exactly why the Stage 2 vs Stage 3 boundary is the single most consequential judgment call in the whole model.</p>
+  </div>
+</section>
+
+<section id="sheet07">
+  <div class="wrap">
+    <div class="sheet-label">Sheet 07</div>
+    <h2>What a reviewer checks first</h2>
+    <div class="acc-group">
+      <div class="acc-item">
+        <button class="acc-head" onclick="toggleAcc(this)">Stage 3 rebuttable presumption <span class="plus">+</span></button>
+        <div class="acc-body"><div class="acc-body-inner">Loans past 90 DPD retained in Stage 2 without a documented, approved rebuttal are one of the most common findings — the 90-day default presumption can be rebutted, but only with clear evidence, not just left unaddressed.</div></div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-head" onclick="toggleAcc(this)">Collateral valuation staleness <span class="plus">+</span></button>
+        <div class="acc-body"><div class="acc-body-inner">LGD is only as good as the collateral value feeding it. Check the valuation date, methodology (forced-sale vs market value), and whether haircuts are refreshed periodically rather than fixed at origination.</div></div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-head" onclick="toggleAcc(this)">CCF application on undrawn facilities <span class="plus">+</span></button>
+        <div class="acc-body"><div class="acc-body-inner">Revolving or partially-drawn facilities should include an undrawn commitment × CCF component in EAD — omitting this understates exposure and, in turn, ECL.</div></div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-head" onclick="toggleAcc(this)">Overlay governance <span class="plus">+</span></button>
+        <div class="acc-body"><div class="acc-body-inner">Management overlays should be documented, approved, time-bound, and reassessed each reporting period — not left as a permanent plug.</div></div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-head" onclick="toggleAcc(this)">SICR threshold consistency <span class="plus">+</span></button>
+        <div class="acc-body"><div class="acc-body-inner">The DPD and rating-grade thresholds used to trigger Stage 2 should be applied consistently across the portfolio and periodically back-tested against actual default experience, not set once and never revisited.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="quiz">
+  <div class="wrap">
+    <div class="sheet-label">Self-check</div>
+    <h2>Five questions before you close the book</h2>
+
+    <div class="quiz-card">
+      <div class="quiz-q">1. A bond is held both to collect contractual cash flows and to sell if liquidity is needed, and its cash flows pass the SPPI test. How is it classified?</div>
+      <button class="quiz-reveal-btn" onclick="revealAnswer(this)">Reveal answer</button>
+      <div class="quiz-answer">Fair Value through Other Comprehensive Income (FVOCI). The "hold to collect and sell" business model combined with passing SPPI is the specific combination that lands an asset in FVOCI rather than amortised cost or FVTPL.</div>
+    </div>
+
+    <div class="quiz-card">
+      <div class="quiz-q">2. What's the key difference between 12-month ECL and lifetime ECL?</div>
+      <button class="quiz-reveal-btn" onclick="revealAnswer(this)">Reveal answer</button>
+      <div class="quiz-answer">12-month ECL only captures losses from default events that are possible within the next 12 months (used for Stage 1). Lifetime ECL captures losses from all possible default events over the full remaining life of the instrument (used for Stage 2 and Stage 3). It's not a 12-month vs. full-term loss amount — it's about which default events are being considered, weighted by their probability.</div>
+    </div>
+
+    <div class="quiz-card">
+      <div class="quiz-q">3. A loan is 45 days past due and has had no rating downgrade or other qualitative indicator. What stage is it likely in, and why?</div>
+      <button class="quiz-reveal-btn" onclick="revealAnswer(this)">Reveal answer</button>
+      <div class="quiz-answer">Stage 2. Being 30+ days past due is the standard's rebuttable presumption of a significant increase in credit risk, which moves the asset to lifetime ECL even without any other quantitative or qualitative trigger.</div>
+    </div>
+
+    <div class="quiz-card">
+      <div class="quiz-q">4. Why might two loans with identical PD and EAD have very different ECL?</div>
+      <button class="quiz-reveal-btn" onclick="revealAnswer(this)">Reveal answer</button>
+      <div class="quiz-answer">Because LGD can differ significantly based on collateral type and quality. A loan secured by cash or a low-haircut asset will have a much lower LGD (and therefore lower ECL) than an otherwise identical unsecured loan or one secured by an asset with a high forced-sale haircut, like inventory or specialised equipment.</div>
+    </div>
+
+    <div class="quiz-card">
+      <div class="quiz-q">5. Under IFRS 9, when does interest revenue switch from being calculated on the gross carrying amount to the net carrying amount?</div>
+      <button class="quiz-reveal-btn" onclick="revealAnswer(this)">Reveal answer</button>
+      <div class="quiz-answer">On entering Stage 3 (credit-impaired). In Stage 1 and Stage 2, interest is still calculated on the gross carrying amount; once an asset is credit-impaired, interest revenue is calculated on the net carrying amount — gross carrying amount less the loss allowance.</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    IFRS 9 Study Blueprint — for personal study reference. Not a substitute for the full standard or professional advice on any specific transaction.
+  </div>
+</footer>
+
+<script>
+  function toggleAcc(btn){
+    const item = btn.parentElement;
+    const body = item.querySelector('.acc-body');
+    const isOpen = item.classList.contains('open');
+    item.parentElement.querySelectorAll('.acc-item').forEach(function(sib){
+      sib.classList.remove('open');
+      sib.querySelector('.acc-body').style.maxHeight = null;
+    });
+    if(!isOpen){
+      item.classList.add('open');
+      body.style.maxHeight = body.scrollHeight + 'px';
+    }
+  }
+  function revealAnswer(btn){
+    btn.parentElement.classList.add('revealed');
+  }
+</script>
+
+</body>
+</html>
